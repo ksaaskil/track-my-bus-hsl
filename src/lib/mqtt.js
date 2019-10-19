@@ -33,8 +33,6 @@ export function onMessage(message) {
 } */
 
 export function subscribeMqtt(onMessage) {
-  // Subscribe to mqtt.hsl.fi
-  let msgs = 0;
   // Hardcoded HSL bus routes
   const buses = [80, 82, 83];
   const destination = "Herttoniemi(M)";

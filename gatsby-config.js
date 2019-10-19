@@ -7,6 +7,14 @@ module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
     {
+      resolve: "gatsby-plugin-react-svg",
+      options: {
+        rule: {
+          include: /icons/,
+        },
+      },
+    },
+    {
       resolve: "gatsby-plugin-react-leaflet",
       options: {
         linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
@@ -37,4 +45,4 @@ module.exports = {
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
   ],
-}
+};

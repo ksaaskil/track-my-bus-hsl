@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+import Icon from "../assets/Bus-logo.svg";
+import * as L from "leaflet";
 import { subscribeMqtt } from "../lib/mqtt";
 const { Map: LeafletMap, TileLayer, Marker, Popup } = require("react-leaflet");
 
-const onMessage = msg => {
-  const parsed = JSON.parse(msg);
-  if (!parsed.VP) {
-    return;
-  }
-  console.log(`Got position: ${JSON.stringify(parsed.VP)}`);
-};
+const icon = new L.Icon({
+  iconUrl: Icon,
+  iconRetinaUrl: Icon,
+  iconAnchor: null,
+  popupAnchor: null,
+  shadowUrl: null,
+  shadowSize: null,
+  shadowAnchor: null,
+  iconSize: new L.Point(20, 20),
+  className: "leaflet-div-icon",
+});
 
 const defaultLatLng = [60.196195, 25.059663];
 const defaultZoom = 17;
@@ -18,11 +24,6 @@ export default ({
   lng = defaultLatLng[1],
   zoom = defaultZoom,
 }) => {
-  useEffect(() => {
-    const unsubscribe = subscribeMqtt(onMessage);
-    return () => unsubscribe();
-  }, []);
-
   const [markers, setMarkers] = useState({});
   const [markerPosition, setMarkerPosition] = useState(null);
 
@@ -47,6 +48,11 @@ export default ({
     // this.prevPositions[vehicleId] = position;
   };
 
+  useEffect(() => {
+    const unsubscribe = subscribeMqtt(onMessage);
+    return () => unsubscribe();
+  }, [onMessage]);
+
   return typeof window !== "undefined" ? (
     <div className="map-container">
       <LeafletMap center={[lat, lng]} zoom={zoom}>
@@ -63,7 +69,7 @@ export default ({
           id="hsl-map"
         />
         {Object.entries(markers).map(([vehicleId, marker]) => (
-          <Marker position={marker} key={vehicleId}>
+          <Marker icon={icon} position={marker} key={vehicleId}>
             <Popup>{vehicleId}</Popup>
           </Marker>
         ))}
